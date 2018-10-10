@@ -1,0 +1,25 @@
+1. roscore
+2. roslaunch server ex) roslibjs
+3. cd Firmware ->  make posix_sitl_default gazebo
+4. roslaunch blockchaindrone offboard.launch fcu_url:="udp://:14540@localhost:14557"
+
+if -> localhost is target
+
+5. rosrun mavros mavsys mode -c OFFBOARD
+or rosrun mavros mavsafety arm
+
+python -m SimpleHTTPServer
+
+https://developer.dji.com/onboard-sdk/documentation/sample-doc/sample-setup.html#before-you-start
+
+ROS Start options
+
+8.Edit the launch file and enter your App ID, Key, Baudrate and Port name in the designated places:
+ex App ID = 62426
+ 
+rosed dji_sdk sdk.launch
+
+9. roslaunch dji_sdk sdk.launch
+
+10. rosrun dji_sdk_demo demo_flight_control
+
