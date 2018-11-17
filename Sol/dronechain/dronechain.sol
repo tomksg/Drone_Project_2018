@@ -1,8 +1,16 @@
 pragma solidity ^0.4.25;
 contract Dronechain {
+    
+    /*
+    state 값에 따른 상태
+    0 : 컨트랙트 상에 등록 완료
+    1 : 드론 수신 완료
+    2 : 미션 진행 중
+    3 : 미션 끝
+    */
     struct mission{
-        int32 dstLat;
-        int32 dstLong;
+        int32[] dstLat;
+        int32[] dstLong;
         address commander;
         uint8 state;
     }
@@ -10,11 +18,13 @@ contract Dronechain {
         int32 droneLat;
         int32 dronelong;
         mission[] missions;
+        uint32 amountOfWaypoint;
         uint8 state;//
     }
     mapping (address => drone)  drones;
     address[] droneList;
-    event createMission(address indexed _from, address indexed _to, uint256);
+    event createMission(address indexed _from, address indexed _to, uint256 _index);
+    event updateMissionState(address indexed _from, address indexed _to, uint256 _index);
     
     
     /*
@@ -26,10 +36,10 @@ contract Dronechain {
     *-- 웨이포인트를 부여했을 때 해당 내용을 이벤트로 발생시켜서 드론에게 전송 이때, 
     드론은 drones[_drone].missions.length-1 값을 missions 의 인덱스로 사용해 명령에 바로 접근 할 수 있다. --*
     */
-    function setWayPoint(address _drone, int32 _latitude, int32 _longitude) external {
+    function setWayPoint(address _drone, int32[] _latitude, int32[] _longitude) external {
         //check range
-        require(_latitude <=90000000 && _latitude >=-90000000 && _longitude <= 180000000 && _longitude >=-180000000);
         drones[_drone].missions.push(mission(_latitude,_longitude,msg.sender,0));
+        drones[_drone].amountOfWaypoint = drones[_drone].amountOfWaypoint + (uint32)(_latitude.length);
         emit createMission(msg.sender, _drone,drones[_drone].missions.length-1); 
     }
     
@@ -41,7 +51,6 @@ contract Dronechain {
     _longitude : 현재 드론의 경도 값
     */
     function registerDrone(int32 _latitude, int32 _longitude) external{
-        require(_latitude <=90000000 && _latitude >=-90000000 && _longitude <= 180000000 && _longitude >=-180000000);
         droneList.push(msg.sender);
         drones[msg.sender].droneLat =_latitude;
         drones[msg.sender].dronelong = _longitude;
@@ -62,13 +71,14 @@ contract Dronechain {
     */
     function traceFlightHistory(address _drone,uint8 _state) external view returns(int32[] , int32[] , address[] , uint ){
         uint32 cnt = 0;
-        int32[] memory dstLat = new int32[](drones[_drone].missions.length);
-        int32[] memory dstLong = new int32[](drones[_drone].missions.length);
-        address[] memory commander = new address[](drones[_drone].missions.length);
+        int32[] memory dstLat = new int32[](drones[_drone].amountOfWaypoint);
+        int32[] memory dstLong = new int32[](drones[_drone].amountOfWaypoint);
+        address[] memory commander = new address[](drones[_drone].amountOfWaypoint);
         for(uint32 i = 0; i<drones[_drone].missions.length; i++){
+            for(uint32 j = 0; j<drones[_drone].missions[i].dstLat.length; j++)
             if(drones[_drone].missions[i].state == _state){
-                dstLat[cnt] = drones[_drone].missions[i].dstLat;
-                dstLong[cnt] = drones[_drone].missions[i].dstLong;
+                dstLat[cnt] = drones[_drone].missions[i].dstLat[j];
+                dstLong[cnt] = drones[_drone].missions[i].dstLong[j];
                 commander[cnt] = drones[_drone].missions[i].commander;
                 cnt++;
             }
@@ -119,12 +129,13 @@ contract Dronechain {
     
     /*
     updateState function
-    드론이 현재 수행중인 미션에 대한 상태를 갱신하는 함수
+    드론이 현재 수행중인 미션에 대한 상태를 갱신하고 해당 내용을 commander에게 알리기 위해 이벤트 발생
     - 입력 설명
     _index : missions배열 중 _index번째 미션의 state를 _state값으로 변경
     _state : 변경할 state 값
     */
     function updateState(uint32 _index, uint8 _state) external{
         drones[msg.sender].missions[_index].state = _state;
+        emit updateMissionState(msg.sender, drones[msg.sender].missions[_index].commander, _state);
     }
 }
