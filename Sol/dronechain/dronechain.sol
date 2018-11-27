@@ -33,14 +33,34 @@ contract Dronechain {
     _drone : 웨이포인트를 지정할 드론의 주소
     _latitude : 웨이포인트의 위도 값
     _longitude : 웨이포인트의 경도 값
+    - 반환 설명
+    _drone : 미션을 신청한 드론의 주소.
+    _drones[_drone].missions.length-1 : 미션 배열의 인덱스로 신청한 미션의 인덱스 값.
     *-- 웨이포인트를 부여했을 때 해당 내용을 이벤트로 발생시켜서 드론에게 전송 이때, 
     드론은 drones[_drone].missions.length-1 값을 missions 의 인덱스로 사용해 명령에 바로 접근 할 수 있다. --*
     */
-    function setWayPoint(address _drone, int32[] _latitude, int32[] _longitude) external {
+    function setWayPoint(address _drone, int32[] _latitude, int32[] _longitude) external returns(address droneAddr,uint256 cmdIndex){
         //check range
         drones[_drone].missions.push(mission(_latitude,_longitude,msg.sender,0));
         drones[_drone].amountOfWaypoint = drones[_drone].amountOfWaypoint + (uint32)(_latitude.length);
-        emit createMission(msg.sender, _drone,drones[_drone].missions.length-1); 
+        emit createMission(msg.sender, _drone,drones[_drone].missions.length-1);
+        return(_drone,drones[_drone].missions.length-1 );
+    }
+    
+    
+    /*
+    setWayPoint 의 반환 값으로 신청한 미션의 진행상황을 파악하기 위한 함수다.
+    - 입력 설명
+    _drone : 드론의 주소
+    _index : 명령 배열에서 참조할 인덱스 값
+    - 반환 설명
+    drones[_drone].missions[_index].dstLat : 신청한 미션의 위도 값
+    drones[_drone].missions[_index].dstLong : 신청한 미션의 경도 값
+    drones[_drone].missions[_index].state : 진행 상황을 나타낸 값
+    */
+    function getMission(address _drone, uint256 _index) external view returns(int32[] _lat, int32[] _long, uint8 _state){
+        require((drones[_drone].missions[_index].commander == msg.sender) || (_drone == msg.sender));
+        return(drones[_drone].missions[_index].dstLat, drones[_drone].missions[_index].dstLong, drones[_drone].missions[_index].state);
     }
     
     
@@ -125,7 +145,7 @@ contract Dronechain {
         drones[msg.sender].droneLat = _latitude;
         drones[msg.sender].dronelong = _longitude;
     }
-    
+
     
     /*
     updateState function
