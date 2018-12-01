@@ -156,6 +156,15 @@ contract Dronechain {
     */
     function updateState(uint32 _index, uint8 _state) external{
         drones[msg.sender].missions[_index].state = _state;
-        emit updateMissionState(msg.sender, drones[msg.sender].missions[_index].commander, _state);
+        emit updateMissionState(msg.sender, drones[msg.sender].missions[_index].commander,_state);
+    }
+    /*
+    returnMissionLength
+    드론에 신청된 미션의 크기를 파악하기 위한 함수
+    - 반환 설명
+    drones[msg.sender].missions.length : msg.sender 드론의 missions 의 크기를 반환한다.
+    */
+    function returnMissionLength()external view returns(uint256){
+        return(drones[msg.sender].missions.length);
     }
 }
