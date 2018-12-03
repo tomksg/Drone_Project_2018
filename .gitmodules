@@ -1,3 +1,6 @@
 [submodule "Android-GSDemo-GoogleMap"]
 	path = Android-GSDemo-GoogleMap
 	url = https://github.com/DJI-Mobile-SDK-Tutorials/Android-GSDemo-GoogleMap.git
+[submodule "map"]
+	path = map
+	url = https://github.com/godgod732/map.git
