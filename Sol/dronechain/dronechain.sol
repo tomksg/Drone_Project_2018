@@ -9,14 +9,14 @@ contract Dronechain {
     3 : 미션 끝
     */
     struct mission{
-        int32[] dstLat;
-        int32[] dstLong;
+        int256[] dstLat;
+        int256[] dstLong;
         address commander;
         uint8 state;
     }
     struct drone {
-        int32 droneLat;
-        int32 dronelong;
+        int256 droneLat;
+        int256 dronelong;
         mission[] missions;
         uint32 amountOfWaypoint;
         uint8 state;//
@@ -39,7 +39,7 @@ contract Dronechain {
     *-- 웨이포인트를 부여했을 때 해당 내용을 이벤트로 발생시켜서 드론에게 전송 이때, 
     드론은 drones[_drone].missions.length-1 값을 missions 의 인덱스로 사용해 명령에 바로 접근 할 수 있다. --*
     */
-    function setWayPoint(address _drone, int32[] _latitude, int32[] _longitude) external returns(address droneAddr,uint256 cmdIndex){
+    function setWayPoint(address _drone, int256[] _latitude, int256[] _longitude) external returns(address droneAddr,uint256 cmdIndex){
         //check range
         drones[_drone].missions.push(mission(_latitude,_longitude,msg.sender,0));
         drones[_drone].amountOfWaypoint = drones[_drone].amountOfWaypoint + (uint32)(_latitude.length);
@@ -53,12 +53,12 @@ contract Dronechain {
     - 입력 설명
     _drone : 드론의 주소
     _index : 명령 배열에서 참조할 인덱스 값
-    - 반환 설명
+    - 반환 설명c
     drones[_drone].missions[_index].dstLat : 신청한 미션의 위도 값
     drones[_drone].missions[_index].dstLong : 신청한 미션의 경도 값
     drones[_drone].missions[_index].state : 진행 상황을 나타낸 값
     */
-    function getMission(address _drone, uint256 _index) external view returns(int32[] _lat, int32[] _long, uint8 _state){
+    function getMission(address _drone, uint256 _index) external view returns(int256[] _lat, int256[] _long, uint8 _state){
         require((drones[_drone].missions[_index].commander == msg.sender) || (_drone == msg.sender));
         return(drones[_drone].missions[_index].dstLat, drones[_drone].missions[_index].dstLong, drones[_drone].missions[_index].state);
     }
@@ -70,7 +70,7 @@ contract Dronechain {
     _latitude : 현재 드론의 위도 값
     _longitude : 현재 드론의 경도 값
     */
-    function registerDrone(int32 _latitude, int32 _longitude) external{
+    function registerDrone(int256 _latitude, int256 _longitude) external{
         droneList.push(msg.sender);
         drones[msg.sender].droneLat =_latitude;
         drones[msg.sender].dronelong = _longitude;
@@ -89,10 +89,10 @@ contract Dronechain {
     commander : 입력 조건에 해당하는 지시자 주소
     cnt : 총 index의 수
     */
-    function traceFlightHistory(address _drone,uint8 _state) external view returns(int32[] , int32[] , address[] , uint ){
+    function traceFlightHistory(address _drone,uint8 _state) external view returns(int256[] , int256[] , address[] , uint ){
         uint32 cnt = 0;
-        int32[] memory dstLat = new int32[](drones[_drone].amountOfWaypoint);
-        int32[] memory dstLong = new int32[](drones[_drone].amountOfWaypoint);
+        int256[] memory dstLat = new int256[](drones[_drone].amountOfWaypoint);
+        int256[] memory dstLong = new int256[](drones[_drone].amountOfWaypoint);
         address[] memory commander = new address[](drones[_drone].amountOfWaypoint);
         for(uint32 i = 0; i<drones[_drone].missions.length; i++){
             for(uint32 j = 0; j<drones[_drone].missions[i].dstLat.length; j++)
@@ -127,7 +127,7 @@ contract Dronechain {
     drones[_drone].dronelong = 해당 드론의 경도 값
     drones[_drone].state = 해당 드론의 현재 상태 값
     */
-    function getDroneStateByAddr(address _drone) external view returns(int32, int32, uint8){
+    function getDroneStateByAddr(address _drone) external view returns(int256, int256, uint8){
         return(drones[_drone].droneLat, drones[_drone].dronelong, drones[_drone].state);
     }
     
