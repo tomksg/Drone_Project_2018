@@ -89,15 +89,14 @@ contract Dronechain {
     commander : 입력 조건에 해당하는 지시자 주소
     cnt : 총 index의 수
     */
-    function traceFlightHistory(address _drone,uint8 _state) external view returns(int256[] , int256[] , address[] , uint8[] ){
+    function traceFlightHistory(address _drone) external view returns(int256[] , int256[] , address[] , uint8[] ){
         uint32 cnt = 0;
         int256[] memory dstLat = new int256[](drones[_drone].amountOfWaypoint);
         int256[] memory dstLong = new int256[](drones[_drone].amountOfWaypoint);
         uint8[]  memory missionState = new uint8[](drones[_drone].amountOfWaypoint);
         address[] memory commander = new address[](drones[_drone].amountOfWaypoint);
         for(uint32 i = 0; i<drones[_drone].missions.length; i++){
-            for(uint32 j = 0; j<drones[_drone].missions[i].dstLat.length; j++)
-            if(drones[_drone].missions[i].state == _state){
+            for(uint32 j = 0; j<drones[_drone].missions[i].dstLat.length; j++){
                 dstLat[cnt] = drones[_drone].missions[i].dstLat[j];
                 dstLong[cnt] = drones[_drone].missions[i].dstLong[j];
                 commander[cnt] = drones[_drone].missions[i].commander;
