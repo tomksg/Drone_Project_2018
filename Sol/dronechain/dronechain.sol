@@ -4,9 +4,9 @@ contract Dronechain {
     /*
     state 값에 따른 상태
     0 : 컨트랙트 상에 등록 완료
-    1 : 드론 수신 완료
-    2 : 미션 진행 중
-    3 : 미션 끝
+    1 : 드론 수신 완료 및 미션 진행 중
+    2 : 미션 완료
+    3 : 거절
     */
     struct mission{
         int256[] dstLat;
@@ -81,13 +81,12 @@ contract Dronechain {
     드론의 비행이력을 조회하는 함수
     - 입력 설명
     _drone : 조회하고자 하는 드론의 어드레스
-    _state : 조회하고자 하는 이력의 상태값
     - 반환 설명
     * 입력 조건에 해당하는 값들의 배열이다. 첫 번째 값을 표시하려면 dstLat[0], dstLong[0], commander[0] 과 같이 사용하면 된다.*
     dstLat : 입력 조건에 해당하는 위도 값
     dstLong : 입력 조건에 해당하는 경도 값
     commander : 입력 조건에 해당하는 지시자 주소
-    cnt : 총 index의 수
+    missionState : 미션별 진행상황 파악을 위한 
     */
     function traceFlightHistory(address _drone) external view returns(int256[] , int256[] , address[] , uint8[] ){
         uint32 cnt = 0;
