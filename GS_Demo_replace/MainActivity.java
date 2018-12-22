@@ -101,15 +101,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private List<Integer> veryShort = new ArrayList<Integer>();
     private List<Waypoint> waypointList = new ArrayList<>(); //웨이포인트 저장될 리스트
 
-    //프로젝트 위해 선언한 변수
+    //프로젝트 변수
     private boolean makercheck = false;
     private MarkerOptions makerOptions = new MarkerOptions();
     int missionLengthFromChain = 0;
     int CurrentMissionnumber = 0;
     int missionStateFromChain; //0 : wait, 1: progress, 2: finish
-
-
-    //tsp 위한 변수선언부 ↓
+    //tps 위한 변수선언부 ↓
     private LatLng currentPOS = new LatLng(droneLocationLat, droneLocationLng); //현재위치
     private static double distance[][]; //두 목적지 사이의 거리 저장할 2차원배열
     private static float dist[] = new float[1];
@@ -127,7 +125,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private boolean sendcheck = false;
     private int operatecount = 0;
     private GetMission getMission;
-    //tsp 위한 변수선언부 ↑
+    //프로젝트 변수선언부 ↑
 
 
 
