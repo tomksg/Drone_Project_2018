@@ -46,10 +46,6 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple3;
 import org.web3j.tuples.generated.Tuple4;
 
-//tsp 위한 라이브러리 선언부 ↓
-
-//tsp 위한 라이브러리 선언부 ↑
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
