@@ -366,7 +366,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                     makerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                                     //updateDroneLocation();
                                     //setResultToToast("3");
-                                    runOnUiThread(new Runnable() {
+                                    runOnUiThread(new Runnable() { //스레드 특징으로써 스레드에 매개인자 없이 디폴트로 생성자 코드가 있고 그 구현부는 사용자들이 알아서 작성하는 방식.
                                         @Override
                                         public void run() { //목적지 마킹
                                             {
