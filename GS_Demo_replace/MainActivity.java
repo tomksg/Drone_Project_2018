@@ -336,11 +336,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                 }
                                 waypointList.add(new Waypoint(37.600943,126.865383,altitude));
                                 waypointMissionBuilder.waypointList(waypointList).waypointCount(waypointList.size());
-                                //TPS 알고리즘 작업은 여기서 ↓
+                                //TSP 알고리즘 작업은 여기서 ↓
 
-                                // 이 영역에 TPS 문제 Permutation 으로 모든 경우 구한 후 최단 경로 판단 및 최단 경로로 미션 빌더 재구성 코드 작업
+                           
+                                // 이 영역에 TSP 문제 Permutation 으로 모든 경우 구한 후 최단 경로 판단 및 최단 경로로 미션 빌더 재구성 코드 작업
 
-                                //TPS 알고리즘 작업은 여기서 ↑
+                                //TSP 알고리즘 작업은 여기서 ↑
                                 setResultToToast("목적지의 개수" + missionsize);
                                 configWayPointMission();
                                 uploadWayPointMission();
@@ -379,11 +380,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                     missionsize++;
                                 }
                                 waypointMissionBuilder.waypointList(waypointList).waypointCount(waypointList.size());
-                                //TPS 알고리즘 작업은 여기서 ↓
+                                //TSP 알고리즘 작업은 여기서 ↓
 
-                                // 이 영역에 TPS 문제 Permutation 으로 모든 경우 구한 후 최단 경로 판단 및 최단 경로로 미션 빌더 재구성 코드 작업
+                                // 이 영역에 TSP 문제 Permutation 으로 모든 경우 구한 후 최단 경로 판단 및 최단 경로로 미션 빌더 재구성 코드 작업
 
-                                //TPS 알고리즘 작업은 여기서 ↑
+                                //TSP 알고리즘 작업은 여기서 ↑
                                 waypointList.add(new Waypoint(37.600943,126.865383,altitude));
                                 waypointMissionBuilder.waypointList(waypointList).waypointCount(waypointList.size());
                                 setResultToToast("목적지 개수" + waypointList.size());
@@ -418,9 +419,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
     }
-    //TPS를 브루트포스해서 최단거라를 구하는 함수 ↓
-    //TPS를 브루트포스해서 최단경로를 구하는 함수가 되도록 고민 필요↓
-    public double TPS(List<Integer> path, boolean visited[], double currentLength){ //path:경로,vistited:방문여부,currentLength:경로거리. 재귀로 호출되며 돈다.
+    //TSP를 브루트포스해서 최단거라를 구하는 함수 ↓
+    //TSP를 브루트포스해서 최단경로를 구하는 함수가 되도록 고민 필요↓
+    public double TSP(List<Integer> path, boolean visited[], double currentLength){ //path:경로,vistited:방문여부,currentLength:경로거리. 재귀로 호출되며 돈다.
         int len = path.size(); //경로 사이즈 맨처음값은 1이고 목적지가 3개면 풀스캔했을때 사이즈가 5가되야함 (0->1->2->3->0)
         if(len == alltargetsize) return currentLength + distance[path.get(0)][path.get(len -1)]; //마지막 번호랑 거리
         double shortpath = 1000000.0;//최단거리가 될 변수, 임의로 큰 거리 값
@@ -430,7 +431,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             int here = path.size();//현재 여기다;
             path.add(next); //경로에 `목적지 추가
             visited[next] = true; //방문으로 변경
-            double shortestpath = TPS(path,visited,currentLength + distance[here][here]);
+            double shortestpath = TSP(path,visited,currentLength + distance[here][here]);
             shortpath = Math.min(shortpath, shortestpath);
 
             visited[next] = false;
@@ -589,7 +590,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                   if(waypointList.size() == 3) { //목적지 3개로 테스팅, 5개로 테스팅하고싶을 땐 5를 이 조건문에 5를 넣으면 된다.
                      /* alltargetsize = waypointList.size() + 1; //목적지 개수. +1을 하는 이유는 home 추가
                       distance = new double[alltargetsize][alltargetsize]; //목적지 갯수만큼 동적할당,각 노드와 노드 사이의 거리 저장할 2차원 배열
-                      //boolean visited[] = new boolean[alltargetsize];//방문했는지 안했는지 체크. tps 함수 쓸땐 필요한 변수. 퍼뮤테이션에선 안쓸거임
+                      //boolean visited[] = new boolean[alltargetsize];//방문했는지 안했는지 체크. TSP 함수 쓸땐 필요한 변수. 퍼뮤테이션에선 안쓸거임
 
 
                       //------0번은 홈 1번부터는 목적지 ~~ 0:home ,  1,2,3 ....:  target -------//
