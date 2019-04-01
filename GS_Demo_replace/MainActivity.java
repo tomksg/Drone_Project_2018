@@ -419,7 +419,81 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
     }
-    //TSP를 브루트포스해서 최단거라를 구하는 함수 ↓
+    //TSP를 브루트포스해서 최단거리를 구하는 함수 ↓
+    
+    
+    //package dp;
+/*
+import java.io.*;
+import java.util.*;
+
+public class TSPTest2 {
+	public static int INF=987654321;
+	public static int N;
+	public static int[][] g;
+	public static int[][] m;//메모이제이션 N사이즈가 커지면 너무 오래걸리니까
+	
+	
+	public static int solve(int pos, int visited , int start) {
+		if(m[pos][visited]!=0) return m[pos][visited];
+		if(visited==(1<<N)-1) return m[pos][visited] = g[pos][start];//시작점의 가중치 리턴
+		
+		int ret=INF;
+		for(int next=0; next<N; next++) {
+			if((visited&(1<<next))==0 && g[pos][next]>0){
+				int tmp=g[pos][next]+solve(next,visited|(1<<next),start);
+				if(ret>tmp) ret=tmp;
+			}
+		}
+		m[pos][visited] = ret;
+		return ret;
+	}
+	public static void main(String[] args) throws Exception{
+		System.setIn(new FileInputStream("res/inputtsp.txt"));
+		Scanner sc=new Scanner(System.in);
+		int T=sc.nextInt();
+		
+		for(int tc=1; tc<=T; tc++) {
+			N=sc.nextInt();
+			g=new int[N][N];
+			
+			for(int i=0; i<N; i++) {
+				for(int j=0; j<N; j++) {
+					g[i][j]=sc.nextInt();
+				}
+			}
+			
+			int ans=INF;
+			for(int i=0; i<N; i++) {
+				m=new int[N][1<<N]; //1을 N번 이동한 부분집합 2^N
+				int tmp=solve(i,1<<i,i);
+				if(ans>tmp) ans=tmp;
+			}
+			System.out.println("#"+tc+" "+ans);
+		}
+		sc.close();
+	}
+}
+
+N~19
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //TSP를 브루트포스해서 최단경로를 구하는 함수가 되도록 고민 필요↓
     public double TSP(List<Integer> path, boolean visited[], double currentLength){ //path:경로,vistited:방문여부,currentLength:경로거리. 재귀로 호출되며 돈다.
         int len = path.size(); //경로 사이즈 맨처음값은 1이고 목적지가 3개면 풀스캔했을때 사이즈가 5가되야함 (0->1->2->3->0)
